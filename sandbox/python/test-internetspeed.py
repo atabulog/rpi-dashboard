@@ -6,6 +6,8 @@ email: austin.tabulog@gmail.com
 =========================================================
 This file is subject to the MIT license copyright notice.
 =========================================================
+
+sample script to test the internet connection using the speedtest library.
 """
 
 #imports
@@ -31,7 +33,6 @@ class simpledataStruct:
         print(f"upload: {self._upload} {self._updownUnit}")
         print(f"ping: {self._ping} {self._pingUnit}")
         print("============================\n\n")
-        
 
 
 #main
