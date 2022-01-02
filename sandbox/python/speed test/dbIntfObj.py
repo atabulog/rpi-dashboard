@@ -12,7 +12,7 @@ Custom object wrapping on mysql based custom 'networkData' table.
 
 #imports
 import mysql.connector as mysql
-
+from sys import platform
 #generic MySQL db object
 class MysqlDb(object):
     def __init__(self, host, db_name, user, password, port=3306):
@@ -21,6 +21,7 @@ class MysqlDb(object):
         self.user = user
         self.password = password
         self.port = port
+	self.linuxSocket = "/var/run/mysqld/mysqld.sock"
         self.conn = None
         self.cursor = None
     
@@ -34,8 +35,12 @@ class MysqlDb(object):
     def connect(self):    
         #create connection to supplied database
         try:
-            self.conn = mysql.connect(host=self.host, port=self.port, database=self.db_name, user=self.user, password=self.password)
-            self.cursor = self.conn.cursor()
+	    if platform == "win32":
+	    	self.conn = mysql.connect(host=self.host, database=self.db_name, user=self.user, password=self.password, port=self.port)
+		self.cursor = self.conn.cursor()
+	    elif platform == "linux":
+            	self.conn = mysql.connect(host=self.host, database=self.db_name, user=self.user, password=self.password, unix_socket=self.linuxSocket)
+            	self.cursor = self.conn.cursor()
             return True
         #tie to null values if connection fails
         except:
@@ -114,7 +119,7 @@ class networkDataTable(MysqlDb):
          
         #connect to host server, and raise error if connection failed
         if(not self.connect()):
-            raise ConnectionError(f"can't connect ot MsSQL server on {self.host}:{self.port}")
+            raise ConnectionError(f"can't connect ot MySQL server on {self.host}:{self.port}")
 
         #create table if one does not exist
         self.create_tableIfMissing()
