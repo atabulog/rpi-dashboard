@@ -21,7 +21,7 @@ class MysqlDb(object):
         self.user = user
         self.password = password
         self.port = port
-	self.linuxSocket = "/var/run/mysqld/mysqld.sock"
+        self.linuxSocket = "/var/run/mysqld/mysqld.sock"
         self.conn = None
         self.cursor = None
     
@@ -35,13 +35,17 @@ class MysqlDb(object):
     def connect(self):    
         #create connection to supplied database
         try:
-	    if platform == "win32":
-	    	self.conn = mysql.connect(host=self.host, database=self.db_name, user=self.user, password=self.password, port=self.port)
-		self.cursor = self.conn.cursor()
-	    elif platform == "linux":
-            	self.conn = mysql.connect(host=self.host, database=self.db_name, user=self.user, password=self.password, unix_socket=self.linuxSocket)
-            	self.cursor = self.conn.cursor()
-            return True
+            #connect using different methods depending on the system making the call
+            if platform == "win32":
+                self.conn = mysql.connect(host=self.host, database=self.db_name, user=self.user, password=self.password, port=self.port)
+                self.cursor = self.conn.cursor()
+                return True
+            elif platform == "linux":
+                self.conn = mysql.connect(host=self.host, database=self.db_name, user=self.user, password=self.password, unix_socket=self.linuxSocket)
+                self.cursor = self.conn.cursor()
+                return True
+            else:
+                return False
         #tie to null values if connection fails
         except:
             self.conn = None
