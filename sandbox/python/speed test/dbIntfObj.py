@@ -12,7 +12,8 @@ Custom object wrapping on mysql based custom 'networkData' table.
 
 #imports
 import mysql.connector as mysql
-from sys import platform
+from sys import platform, argv
+
 #generic MySQL db object
 class MysqlDb(object):
     def __init__(self, host, db_name, user, password, port=3306):
@@ -103,12 +104,21 @@ class MysqlDb(object):
 #object for network data table
 class networkDataTable(MysqlDb):
     def __init__(self):
-        #init parent object
-        super().__init__(host="localhost", 
-                         db_name="rpi_dashboard", 
-                         user="user", 
-                         password="", 
-                         port=3306)
+        #init parent object based on script call parameters
+        if len(argv) > 1 and argv[1] == "-w":
+            super().__init__(host="10.0.0.151", 
+                            db_name="rpi_dashboard", 
+                            user="user", 
+                            password="", 
+                            port=3306)
+        
+        else:
+            super().__init__(host="localhost", 
+                            db_name="rpi_dashboard", 
+                            user="user", 
+                            password="", 
+                            port=3306)
+            
         
         #init other attributes
         self.results = None
@@ -155,3 +165,8 @@ class networkDataTable(MysqlDb):
                 VALUES (%s, %s, %s, %s);"
         self.cursor.execute(query, (str(server), float(ping), float(download), float(upload)))
         self.conn.commit()
+
+    def fetch_allData(self):
+        query = f"SELECT * FROM {self._tableName};"
+        self.cursor.execute(query)
+        self.results = self.cursor.fetchall()
