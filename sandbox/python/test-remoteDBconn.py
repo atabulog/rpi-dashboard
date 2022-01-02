@@ -32,7 +32,7 @@ class simpledataStruct:
 
 
 if __name__ == "__main__":
-    host_ip = "10.0.0.152"
+    host_ip = "10.0.0.151"
     db_name = "demo"
     host_port = 3306
     user = "user"

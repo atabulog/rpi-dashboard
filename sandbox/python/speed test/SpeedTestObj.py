@@ -33,7 +33,7 @@ class SpeedTestData:
     """
     def toDict(self):
         tempDict = {"timestamp": self.timestamp,
-                    "server": self.server,
+                    "server": str.replace(self.server, ",", "-"),
                     "download":self.download,
                     "upload": self.upload,
                     "ping": self.ping,
