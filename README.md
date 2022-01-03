@@ -13,4 +13,5 @@ For the first iteration, the rpi-dashboard will only display network connection 
 
 ### TODO
 1. Need to setup a way for the db to act as a rolling buffer, getting rid of old data
-2. buuild qt web app hosted on pi to display network data as a tab on the dashboard
+2. build qt web app hosted on pi to display network data as a tab on the dashboard
+3. write test to get closest available server, not 'best' server.
